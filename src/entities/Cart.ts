@@ -6,6 +6,8 @@ import {
   OneToOne,
   JoinColumn,
   OneToMany,
+  ManyToOne,
+  Column,
 } from "typeorm";
 import User from "./User";
 import CartProduct from "./CartProduct";
@@ -22,8 +24,14 @@ export default class Cart {
   @UpdateDateColumn()
   updatedOn!: Date;
 
-  @OneToOne((type) => User)
-  @JoinColumn()
+  @Column()
+  purchased!: false;
+
+  @ManyToOne(() => User, (user) => user.carts, {
+    onDelete: "RESTRICT",
+    onUpdate: "RESTRICT",
+  })
+  @JoinColumn([{ name: "userId", referencedColumnName: "id" }])
   user: User;
 
   @OneToMany(() => CartProduct, (cartProduct) => cartProduct.cart, {

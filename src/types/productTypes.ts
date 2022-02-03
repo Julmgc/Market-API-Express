@@ -1,7 +1,7 @@
-export interface UserData {
+export interface ProductData {
   name: string;
-  email: string;
-  password: string;
+  price: number;
+  description: string;
   isAdm: boolean;
   created_at: Date;
   updated_at: Date;

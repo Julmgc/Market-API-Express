@@ -9,7 +9,6 @@ import {
   OneToMany,
 } from "typeorm";
 import Cart from "./Cart";
-import Purchase from "./Purchase";
 
 @Entity("users")
 export default class User {
@@ -29,16 +28,18 @@ export default class User {
   isAdm: boolean;
 
   @CreateDateColumn()
-  createdOn: Date;
+  createdOn!: Date;
 
   @UpdateDateColumn()
-  updatedOn: Date;
+  updatedOn!: Date;
 
-  @OneToOne((type) => Cart, {
-    cascade: true,
-    onDelete: "CASCADE",
+  @OneToMany(() => Cart, (cart) => cart.user, {
+    nullable: true,
     primary: true,
+    onDelete: "CASCADE",
   })
-  @JoinColumn()
-  cart: Cart;
+  @JoinColumn({
+    name: "cartId",
+  })
+  carts?: Cart;
 }
