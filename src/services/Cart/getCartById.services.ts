@@ -20,8 +20,9 @@ export const userCart = async (user_id: any, cart_id_params: any) => {
     if (authenticated_user?.isAdm) {
       return cart;
     }
-    console.log(cart);
+
     if (authenticated_user?.cart.id !== cart.id) {
+      console.log("CART", authenticated_user?.cart.id !== cart.id);
       throw new AppError("You can only see your own cart", 400);
     }
 

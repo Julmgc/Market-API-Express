@@ -2,6 +2,7 @@ import express from "express";
 import { initializerRouter } from "./router";
 import "reflect-metadata";
 import { connectDatabase } from "./database";
+import { errorHandler } from "./middlewares/error.middleware";
 
 connectDatabase();
 
@@ -11,8 +12,5 @@ app.use(express.json());
 
 initializerRouter(app);
 
-app.get("/get", (req, res) => {
-  res.send({ message: "OK" });
-});
-
+app.use(errorHandler);
 export default app;
