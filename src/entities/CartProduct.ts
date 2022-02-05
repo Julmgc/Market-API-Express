@@ -21,9 +21,6 @@ class CartProduct {
   cart: Cart;
 
   @Column()
-  productId: string;
-
-  @Column()
   cartId: string;
 
   @CreateDateColumn()

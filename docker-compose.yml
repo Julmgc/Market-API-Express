@@ -21,7 +21,8 @@ services:
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=market
-
+    volumes:
+      - postgresdatabase:/var/lib/postgresql/data
   admin:
     image: adminer
     restart: always
@@ -29,3 +30,6 @@ services:
       - db
     ports:
       - 8080:8080
+
+volumes:
+  postgresdatabase:

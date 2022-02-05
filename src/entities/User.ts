@@ -33,13 +33,7 @@ export default class User {
   @UpdateDateColumn()
   updatedOn!: Date;
 
-  @OneToMany(() => Cart, (cart) => cart.user, {
-    nullable: true,
-    primary: true,
-    onDelete: "CASCADE",
-  })
-  @JoinColumn({
-    name: "cartId",
-  })
-  carts?: Cart;
+  @OneToOne(() => Cart, (cart) => cart.user, { eager: true })
+  @JoinColumn()
+  cart: Cart;
 }

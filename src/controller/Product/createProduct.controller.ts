@@ -10,8 +10,16 @@ export const userCreate = async (
   next: NextFunction
 ) => {
   try {
-    const { email } = req.body;
+    const { name } = req.body;
     const productRepository = getCustomRepository(ProductRepository);
+
+    const duplicatedProduct = await productRepository.findByName(name);
+
+    if (duplicatedProduct) {
+      return res
+        .status(400)
+        .json({ message: "A product with this name already exists" });
+    }
 
     const product = await createProduct(req.body, res);
 

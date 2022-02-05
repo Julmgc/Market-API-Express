@@ -24,20 +24,13 @@ export default class Cart {
   @UpdateDateColumn()
   updatedOn!: Date;
 
-  @Column()
-  purchased!: false;
-
-  @ManyToOne(() => User, (user) => user.carts, {
-    onDelete: "RESTRICT",
-    onUpdate: "RESTRICT",
-  })
-  @JoinColumn([{ name: "userId", referencedColumnName: "id" }])
+  @OneToOne(() => User, (user) => user.cart)
   user: User;
 
   @OneToMany(() => CartProduct, (cartProduct) => cartProduct.cart, {
     eager: true,
   })
-  products: CartProduct[];
+  products!: CartProduct[];
 
   @Expose({ name: "subtotal" })
   getSubtotal(): number {

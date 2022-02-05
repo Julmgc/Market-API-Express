@@ -3,10 +3,10 @@ import { Product } from "../entities";
 
 @EntityRepository(Product)
 class ProductRepository extends Repository<Product> {
-  public async findById(id: any): Promise<Product | undefined> {
+  public async findByName(name: any): Promise<Product | undefined> {
     const product = await this.findOne({
       where: {
-        id: id,
+        name: name,
       },
     });
 

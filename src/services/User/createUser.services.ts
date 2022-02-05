@@ -3,12 +3,13 @@ import bcrypt from "bcrypt";
 import { UserData } from "../../types/userTypes";
 import UserRepository from "../../repository/user.repository";
 import { Response } from "express";
+import CartRepository from "../../repository/cart.repository";
 
 export const createUser = async (body: UserData, res: Response) => {
   const { name, email, password, isAdm } = body;
 
   const userRepository = getCustomRepository(UserRepository);
-
+  const cartRepository = getCustomRepository(CartRepository);
   const hashedPassword = bcrypt.hashSync(password, 10);
   const user = await userRepository.create({
     name: name,
@@ -21,6 +22,10 @@ export const createUser = async (body: UserData, res: Response) => {
 
   await userRepository.save(user);
 
+  const user_cart = cartRepository.create({ user: user });
+
+  await cartRepository.save(user_cart);
+
   const returned_user = {
     uuid: user.id,
     createdOn: new Date(),
@@ -30,5 +35,5 @@ export const createUser = async (body: UserData, res: Response) => {
     isAdm: isAdm,
   };
 
-  return returned_user;
+  return user;
 };

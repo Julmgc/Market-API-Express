@@ -11,7 +11,7 @@ class Product {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @Column()
