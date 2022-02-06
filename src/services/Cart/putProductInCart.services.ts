@@ -22,6 +22,7 @@ export const putProductInCart = async (product_id: string, user_id: string) => {
   }
 
   const cart = await cartRepository.findOne({ id: user?.cart.id });
+
   const productToCart = await cartProductRepository.create({
     cart: { id: cart?.id },
     product: { id: product?.id },
