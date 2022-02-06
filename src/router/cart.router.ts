@@ -11,8 +11,7 @@ import { deleteCartProduct } from "../controller/Cart/deleteProductInCart.contro
 const router = Router();
 
 export const cartRouter = () => {
-  router.post("/addProduct", isAuthenticated, insertProductInCart);
-
+  router.post("/cart", isAuthenticated, insertProductInCart);
   router.get("/cart", isAuthenticated, isAdm_middleware, getCarts);
   router.get("/cart/:id", isAuthenticated, UserCart);
   router.delete("/cart/:product_id", isAuthenticated, deleteCartProduct);

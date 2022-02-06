@@ -26,6 +26,7 @@ export const deleteProductFromCart = async (
     const authenticated_user = await userRepository.findOne({
       where: { id: authenticated_user_id },
     });
+
     const user_cart = authenticated_user?.cart;
     const user_cart_id = user_cart?.id;
 

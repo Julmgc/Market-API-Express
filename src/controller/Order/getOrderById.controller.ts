@@ -1,0 +1,18 @@
+import { Request, Response, NextFunction } from "express";
+import { userOrder } from "../../services/Order/getOrderById.services";
+
+export const UserOrder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user_id = req.user.id;
+    const order_id = req.params.id;
+    const order = await userOrder(user_id, order_id);
+
+    return res.status(200).json(order);
+  } catch (err) {
+    next(err);
+  }
+};

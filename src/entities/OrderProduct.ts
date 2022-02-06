@@ -6,22 +6,22 @@ import {
   UpdateDateColumn,
   ManyToOne,
 } from "typeorm";
-import Cart from "./Cart";
+import Order from "./Order";
 import Product from "./Product";
 
-@Entity("cart_products")
-class CartProduct {
+@Entity("order_products")
+class OrderProduct {
   @PrimaryGeneratedColumn()
   id: string;
 
   @ManyToOne(() => Product, { eager: true })
   product: Product;
 
-  @ManyToOne(() => Cart, { cascade: true })
-  cart: Cart;
+  @ManyToOne(() => Order, { cascade: true })
+  order: Order;
 
   @Column()
-  cartId: string;
+  orderId: string;
 
   @CreateDateColumn()
   created_at: Date;
@@ -30,4 +30,4 @@ class CartProduct {
   updated_at: Date;
 }
 
-export default CartProduct;
+export default OrderProduct;

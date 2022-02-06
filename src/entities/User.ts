@@ -9,6 +9,7 @@ import {
   OneToMany,
 } from "typeorm";
 import Cart from "./Cart";
+import Order from "./Order";
 
 @Entity("users")
 export default class User {
