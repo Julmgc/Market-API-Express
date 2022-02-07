@@ -10,8 +10,9 @@ export const UserCart = async (
     const user_id = req.user.id;
     const cart_id = req.params.id;
     const cart = await userCart(user_id, cart_id);
-
-    return res.status(200).json(cart);
+    const total = cart.getSubtotal();
+    const response = { cart: cart, total: total };
+    return res.status(200).json(response);
   } catch (err) {
     next(err);
   }

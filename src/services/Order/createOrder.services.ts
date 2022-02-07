@@ -5,6 +5,8 @@ import CartRepository from "../../repository/cart.repository";
 import OrderRepository from "../../repository/orderRepository";
 import { Cart, CartProduct } from "../../entities";
 import ProductRepository from "../../repository/product.repository";
+import SendOrderEmailService from "../OrderEmail/sendOrderEmail.services";
+
 export const userOrder = async (user_id: any) => {
   try {
     const usersRepository = getCustomRepository(UserRepository);
@@ -14,6 +16,10 @@ export const userOrder = async (user_id: any) => {
     const user = await usersRepository.findOne({
       where: { id: user_id },
     });
+
+    if (!user) {
+      throw new AppError("User not found", 404);
+    }
 
     const open_order = await orderRepository.findOne({
       where: [{ userId: user_id }, { Done: false }],
@@ -30,6 +36,19 @@ export const userOrder = async (user_id: any) => {
     const user_cart = cartRepository.create({ user: user });
 
     await cartRepository.save(user_cart);
+
+    const sendOrderEmailService = new SendOrderEmailService();
+    const total = orderAfterUpdate?.getTotal();
+
+    if (!total) {
+      throw new AppError("Order not found", 404);
+    }
+
+    sendOrderEmailService.execute({
+      name: user.name,
+      email: user.email,
+      orderTotal: total,
+    });
 
     return orderAfterUpdate;
   } catch (error) {

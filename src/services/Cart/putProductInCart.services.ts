@@ -37,11 +37,10 @@ export const putProductInCart = async (product_id: string, user_id: string) => {
     await cartProductRepository.save(productToCart);
     const cart_1 = await cartRepository.findOne({ id: user?.cart.id });
 
-    // LOOK FOR DONE FALSE ORDER OR CREATING ONE AND PUTTING PRODUCT IN ORDER
-
     const open_order = await orderRepository.findOne({
-      where: [{ userId: user_id }, { Done: false }],
+      where: [{ userId: user_id, Done: false }],
     });
+
     if (!open_order) {
       const createOrder = await orderRepository.create({
         userId: user_id,
