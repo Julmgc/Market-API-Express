@@ -5,30 +5,23 @@ import hbs from "nodemailer-express-handlebars";
 import Code from "../../entities/Code";
 import { getCustomRepository, getRepository } from "typeorm";
 import UserRepository from "../../repository/user.repository";
-import { Request, Response, NextFunction } from "express";
 import { v4 as uuidv4 } from "uuid";
 
-// interface Request {
-//   email: string;
-// }
-
 export default class SendPasswordCodeService {
-  public async execute(email: any): Promise<void> {
+  public async execute(user_id: any): Promise<void> {
     try {
       const usersRepository = getCustomRepository(UserRepository);
 
       const codeRepository = getRepository(Code);
 
       const user = await usersRepository.findOne({
-        where: { email: email },
+        where: { id: user_id },
       });
 
       if (!user) {
         throw new AppError("User not found", 404);
       }
-      const user_id = user.id;
-      console.log(user_id);
-      // CRIAR E ASSOCIAR NEW CODE COM O USER
+
       const code = await codeRepository.findOne({
         where: {
           user: user,
@@ -69,7 +62,7 @@ export default class SendPasswordCodeService {
       );
       const mail = {
         from: "market_don't_answer@market.com",
-        to: email,
+        to: user.email,
         subject: "Retrieve password",
         template: "retrievePassword",
         context: {
@@ -80,7 +73,6 @@ export default class SendPasswordCodeService {
 
       mailer.sendMail(mail, (err, info) => {
         if (err) {
-          console.log(err);
           throw new AppError((err as any).message, 401);
         }
       });

@@ -44,7 +44,6 @@ export default class SendEmailService {
 
     mailer.sendMail(mail, (err, info) => {
       if (err) {
-        console.log(err);
         throw new AppError("Error while sending  email", 500);
       }
     });

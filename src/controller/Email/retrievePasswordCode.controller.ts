@@ -12,10 +12,10 @@ export const retrievePasswordCode = async (
   next: NextFunction
 ) => {
   try {
-    const { email } = req.body;
+    const user_id = req.user.id;
 
     const send_conde = new SendPasswordCodeService();
-    const code = await send_conde.execute(email);
+    const code = await send_conde.execute(user_id);
 
     return res
       .status(200)
