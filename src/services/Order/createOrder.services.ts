@@ -5,7 +5,7 @@ import CartRepository from "../../repository/cart.repository";
 import OrderRepository from "../../repository/orderRepository";
 import { Cart, CartProduct } from "../../entities";
 import ProductRepository from "../../repository/product.repository";
-import SendOrderEmailService from "../OrderEmail/sendOrderEmail.services";
+import SendOrderEmailService from "../Email/sendOrderEmail.services";
 
 export const userOrder = async (user_id: any) => {
   try {
