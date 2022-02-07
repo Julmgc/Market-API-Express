@@ -1,15 +1,16 @@
-import { getCustomRepository } from "typeorm";
 import bcrypt from "bcrypt";
 import { UserData } from "../../types/userTypes";
 import UserRepository from "../../repository/user.repository";
 import { Response } from "express";
 import CartRepository from "../../repository/cart.repository";
+import { getCustomRepository } from "typeorm";
 
 export const createUser = async (body: UserData, res: Response) => {
   const { name, email, password, isAdm } = body;
 
   const userRepository = getCustomRepository(UserRepository);
   const cartRepository = getCustomRepository(CartRepository);
+
   const hashedPassword = bcrypt.hashSync(password, 10);
   const user = await userRepository.create({
     name: name,
@@ -35,5 +36,5 @@ export const createUser = async (body: UserData, res: Response) => {
     isAdm: isAdm,
   };
 
-  return user;
+  return returned_user;
 };
