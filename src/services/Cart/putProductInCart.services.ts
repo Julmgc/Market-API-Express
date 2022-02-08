@@ -45,7 +45,6 @@ export const putProductInCart = async (product_id: string, user_id: string) => {
     if (cartProduct) {
       cartProduct.quantity = cartProduct.quantity + 1;
       await cartProductRepository.save(cartProduct);
-      console.log(cartProduct.quantity);
     }
 
     const cart_1 = await cartRepository.findOne({ id: user?.cart.id });
