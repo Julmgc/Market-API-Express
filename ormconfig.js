@@ -17,7 +17,7 @@ const developmentEnv = {
 
   logging: false,
 
-  synchronize: true,
+  synchronize: false,
 
   cli: {
     migrationsDir: "./src/database/migrations",
