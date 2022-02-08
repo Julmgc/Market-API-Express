@@ -29,7 +29,7 @@ export const putProductInCart = async (product_id: string, user_id: string) => {
     //PUTTING PRODUCT IN CART
     const cart = await cartRepository.findOne({ id: user?.cart.id });
 
-    const productToCart = await cartProductRepository.create({
+    const productToCart = cartProductRepository.create({
       cart: { id: cart?.id },
       product: { id: product?.id },
     });
@@ -42,7 +42,7 @@ export const putProductInCart = async (product_id: string, user_id: string) => {
     });
 
     if (!open_order) {
-      const createOrder = await orderRepository.create({
+      const createOrder = orderRepository.create({
         userId: user_id,
         Done: false,
       });
@@ -53,13 +53,15 @@ export const putProductInCart = async (product_id: string, user_id: string) => {
         where: [{ userId: user_id }, { Done: false }],
       });
 
-      const productToOrder = await orderProductRepository.create({
+      const productToOrder = orderProductRepository.create({
         orderId: find_open_order?.id,
         product: { id: product?.id },
       });
       await orderProductRepository.save(productToOrder);
+
+      return cart_1;
     }
-    const productToOrder = await orderProductRepository.create({
+    const productToOrder = orderProductRepository.create({
       order: { id: open_order?.id },
       product: { id: product?.id },
     });

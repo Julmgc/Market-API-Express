@@ -30,9 +30,12 @@ export const deleteProductFromCart = async (
     const user_cart = authenticated_user?.cart;
     const user_cart_id = user_cart?.id;
 
-    cartProductRepository.findOne({
+    const cartProduct = await cartProductRepository.find({
       where: { cart: user_cart_id, product: product_id },
     });
+    if (!cartProduct) {
+      throw new AppError("You don't have this product in your cart", 404);
+    }
 
     cartProductRepository.delete(product_id);
 

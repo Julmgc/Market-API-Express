@@ -19,6 +19,8 @@ export const userProfile = async (user_by_id: any, authenticated_user: any) => {
     } else if (userAdm?.isAdm) {
       const users = usersRepository.find();
       return users;
+    } else {
+      throw new AppError("You can only see your own user information.", 401);
     }
   } catch (error) {
     throw new AppError((error as any).message, 401);

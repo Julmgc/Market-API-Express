@@ -23,5 +23,20 @@ const developmentEnv = {
     migrationsDir: "./src/database/migrations",
   },
 };
+// ALTERAR OS IFS QUANDO FIZER O DEPLOY, TEM QUE ACRESCENTAR A OPÇÃO DE ESTAR EM PRODUÇÃO
 
-module.exports = developmentEnv;
+const testEnv = {
+  type: "sqlite",
+  database: ":memory:",
+  entities: ["./src/entities/**/*.ts"],
+  synchronize: true,
+};
+
+let exportModule = undefined;
+if (process.env.NODE_ENV === "test") {
+  exportModule = testEnv;
+} else {
+  exportModule = developmentEnv;
+}
+
+module.exports = exportModule;

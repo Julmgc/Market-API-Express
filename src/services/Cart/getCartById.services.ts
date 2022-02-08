@@ -13,7 +13,7 @@ export const userCart = async (user_id: any, cart_id_params: any) => {
     const cart = await cartRepository.findOne({ id: cart_id_params });
 
     if (cart === undefined) {
-      throw new AppError("Cart Not Found", 400);
+      throw new AppError("Cart Not Found", 404);
     }
 
     if (authenticated_user?.isAdm) {
@@ -21,7 +21,7 @@ export const userCart = async (user_id: any, cart_id_params: any) => {
     }
 
     if (authenticated_user?.cart.id !== cart.id) {
-      throw new AppError("You can only see your own cart", 400);
+      throw new AppError("You can only see your own cart", 401);
     }
 
     return cart;
