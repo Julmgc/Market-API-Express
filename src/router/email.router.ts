@@ -11,7 +11,7 @@ const router = Router();
 
 export const emailRouter = () => {
   router.post("/email", isAuthenticated, isAdm_middleware, sendEmail);
-  router.post("/recuperar", isAuthenticated, retrievePasswordCode);
-  router.post("/alterar_senha", isAuthenticated, changePassword);
+  router.post("/recuperar", retrievePasswordCode);
+  router.post("/alterar_senha", changePassword);
   return router;
 };

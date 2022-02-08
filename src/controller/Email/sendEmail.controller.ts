@@ -27,7 +27,7 @@ export const sendEmail = async (
       subject,
       text,
     });
-    return res.status(200).json("Email was sent");
+    return res.status(201).json("Email was sent.");
   } catch (err) {
     next(err);
   }

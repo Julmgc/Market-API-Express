@@ -9,13 +9,12 @@ export const deleteCartProduct = async (
   try {
     const product_id = req.params.product_id;
     const authenticated_user_id = req.user.id;
-    const deleted_product = await deleteProductFromCart(
+    const updatedCart = await deleteProductFromCart(
       product_id,
       authenticated_user_id
     );
-    return res
-      .status(200)
-      .json(`Product ${deleted_product} was deleted from your cart.`);
+
+    return res.status(200).json(updatedCart?.products);
   } catch (error) {
     next(error);
   }

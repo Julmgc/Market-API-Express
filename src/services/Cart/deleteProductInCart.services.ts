@@ -3,6 +3,9 @@ import { getRepository, getCustomRepository } from "typeorm";
 import UserRepository from "../../repository/user.repository";
 import { CartProduct } from "../../entities";
 import ProductRepository from "../../repository/product.repository";
+import CartRepository from "../../repository/cart.repository";
+import OrderRepository from "../../repository/orderRepository";
+import OrderProduct from "../../entities/OrderProduct";
 
 export const deleteProductFromCart = async (
   product_id: any,
@@ -10,10 +13,11 @@ export const deleteProductFromCart = async (
 ) => {
   try {
     const cartProductRepository = getRepository(CartProduct);
-
-    const userRepository = await getCustomRepository(UserRepository);
-
+    const cartRepository = getCustomRepository(CartRepository);
+    const userRepository = getCustomRepository(UserRepository);
+    const orderRepository = getCustomRepository(OrderRepository);
     const productsRepository = getCustomRepository(ProductRepository);
+    const orderProductRepository = getRepository(OrderProduct);
 
     const product = productsRepository.findOne({
       where: { id: product_id },
@@ -27,19 +31,56 @@ export const deleteProductFromCart = async (
       where: { id: authenticated_user_id },
     });
 
-    const user_cart = authenticated_user?.cart;
-    const user_cart_id = user_cart?.id;
+    // DELETING PRODUCT FROM CART AND ORDER
 
-    const cartProduct = await cartProductRepository.find({
-      where: { cart: user_cart_id, product: product_id },
+    const cart = await cartRepository.findOne({
+      id: authenticated_user?.cart.id,
+    });
+
+    if (cart === undefined) {
+      throw new AppError("Cart Not Found", 404);
+    }
+
+    const cartProduct = await cartProductRepository.findOne({
+      where: { cartId: cart?.id, product: product_id },
     });
     if (!cartProduct) {
       throw new AppError("You don't have this product in your cart", 404);
     }
+    const order = await orderRepository.findOne({
+      userId: authenticated_user?.id,
+    });
 
-    cartProductRepository.delete(product_id);
+    if (order === undefined) {
+      throw new AppError("Order Not Found", 404);
+    }
 
-    return product_id;
+    const orderProduct = await orderProductRepository.findOne({
+      where: { orderId: order?.id, product: product_id },
+    });
+    if (!orderProduct) {
+      throw new AppError("You don't have this product in your cart", 404);
+    }
+
+    if (cartProduct) {
+      if (cartProduct.quantity <= 1) {
+        await cartProductRepository.delete(cartProduct.id);
+        await orderProductRepository.delete(orderProduct.id);
+        const cart = await cartRepository.findOne({
+          id: authenticated_user?.cart.id,
+        });
+        return cart;
+      }
+      cartProduct.quantity = cartProduct.quantity - 1;
+      await cartProductRepository.save(cartProduct);
+      orderProduct.quantity = orderProduct.quantity - 1;
+      await orderProductRepository.save(orderProduct);
+    }
+
+    const cartAfterChanges = await cartRepository.findOne({
+      id: authenticated_user?.cart.id,
+    });
+    return cartAfterChanges;
   } catch (error) {
     throw new AppError((error as any).message, 401);
   }

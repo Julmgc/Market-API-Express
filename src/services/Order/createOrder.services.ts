@@ -6,12 +6,14 @@ import OrderRepository from "../../repository/orderRepository";
 import { Cart, CartProduct } from "../../entities";
 import ProductRepository from "../../repository/product.repository";
 import SendOrderEmailService from "../Email/sendOrderEmail.services";
+import OrderProduct from "../../entities/OrderProduct";
 
 export const userOrder = async (user_id: any) => {
   try {
     const usersRepository = getCustomRepository(UserRepository);
     const cartRepository = getCustomRepository(CartRepository);
     const orderRepository = getCustomRepository(OrderRepository);
+    const orderProductRepository = getRepository(OrderProduct);
 
     const user = await usersRepository.findOne({
       where: { id: user_id },
@@ -41,7 +43,7 @@ export const userOrder = async (user_id: any) => {
     const total = orderAfterUpdate?.getTotal();
 
     if (!total) {
-      throw new AppError("Order not found", 404);
+      throw new AppError("Your cart is empty", 404);
     }
 
     sendOrderEmailService.execute({

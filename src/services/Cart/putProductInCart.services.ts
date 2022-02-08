@@ -23,19 +23,34 @@ export const putProductInCart = async (product_id: string, user_id: string) => {
     });
 
     if (!product) {
-      throw new AppError("Product id doesn't exist", 404);
+      throw new AppError("Product doesn't exist", 404);
     }
 
     //PUTTING PRODUCT IN CART
     const cart = await cartRepository.findOne({ id: user?.cart.id });
 
-    const productToCart = cartProductRepository.create({
-      cart: { id: cart?.id },
-      product: { id: product?.id },
+    const cartProduct = await cartProductRepository.findOne({
+      where: { cartId: cart?.id, product: product_id },
     });
 
-    await cartProductRepository.save(productToCart);
+    if (!cartProduct) {
+      const productToCart = cartProductRepository.create({
+        cartId: cart?.id,
+        product: { id: product?.id },
+        quantity: 1,
+      });
+
+      await cartProductRepository.save(productToCart);
+    }
+    if (cartProduct) {
+      cartProduct.quantity = cartProduct.quantity + 1;
+      await cartProductRepository.save(cartProduct);
+      console.log(cartProduct.quantity);
+    }
+
     const cart_1 = await cartRepository.findOne({ id: user?.cart.id });
+
+    // PUTTING PRODUCT IN ORDER
 
     const open_order = await orderRepository.findOne({
       where: [{ userId: user_id, Done: false }],
@@ -56,16 +71,31 @@ export const putProductInCart = async (product_id: string, user_id: string) => {
       const productToOrder = orderProductRepository.create({
         orderId: find_open_order?.id,
         product: { id: product?.id },
+        quantity: 1,
       });
       await orderProductRepository.save(productToOrder);
 
       return cart_1;
     }
-    const productToOrder = orderProductRepository.create({
+    const productToOrder = await orderProductRepository.findOne({
       order: { id: open_order?.id },
       product: { id: product?.id },
     });
-    await orderProductRepository.save(productToOrder);
+
+    if (!productToOrder) {
+      const productToOrder = orderProductRepository.create({
+        order: { id: open_order?.id },
+        product: { id: product?.id },
+        quantity: 1,
+      });
+      await orderProductRepository.save(productToOrder);
+    }
+    if (productToOrder) {
+      productToOrder.quantity = productToOrder.quantity + 1;
+      await orderProductRepository.save(productToOrder);
+
+      await orderProductRepository.save(productToOrder);
+    }
 
     return cart_1;
   } catch (error) {

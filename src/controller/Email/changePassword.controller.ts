@@ -6,17 +6,17 @@ export const changePassword = async (
   next: NextFunction
 ) => {
   try {
-    const user_id = req.user.id;
+    const { email } = req.body;
     const { code, password, confirmation } = req.body;
 
     const new_password = await changeUserPassword(
-      user_id,
+      email,
       code,
       password,
       confirmation
     );
 
-    return res.status(200).json("Your password was changed.");
+    return res.status(201).json("Your password was changed.");
   } catch (err) {
     next(err);
   }

@@ -8,14 +8,14 @@ import UserRepository from "../../repository/user.repository";
 import { v4 as uuidv4 } from "uuid";
 
 export default class SendPasswordCodeService {
-  public async execute(user_id: any): Promise<void> {
+  public async execute(email: any): Promise<void> {
     try {
       const usersRepository = getCustomRepository(UserRepository);
 
       const codeRepository = getRepository(Code);
 
       const user = await usersRepository.findOne({
-        where: { id: user_id },
+        where: { email: email },
       });
 
       if (!user) {

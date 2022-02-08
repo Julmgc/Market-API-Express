@@ -5,7 +5,7 @@ import Code from "../../entities/Code";
 import { getCustomRepository, getRepository } from "typeorm";
 
 export const changeUserPassword = async (
-  user_id: string,
+  email: string,
   code: string,
   password: string,
   confirmation: string
@@ -21,7 +21,7 @@ export const changeUserPassword = async (
     const usersRepository = getCustomRepository(UserRepository);
 
     const user = await usersRepository.findOne({
-      where: { id: user_id },
+      where: { email: email },
     });
     if (!user) {
       throw new AppError("User not found", 404);

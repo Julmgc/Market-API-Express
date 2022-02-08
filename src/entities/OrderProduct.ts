@@ -28,6 +28,9 @@ class OrderProduct {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Column()
+  quantity: number;
 }
 
 export default OrderProduct;

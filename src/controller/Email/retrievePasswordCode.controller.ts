@@ -12,14 +12,14 @@ export const retrievePasswordCode = async (
   next: NextFunction
 ) => {
   try {
-    const user_id = req.user.id;
+    const { email } = req.body;
 
     const send_conde = new SendPasswordCodeService();
-    const code = await send_conde.execute(user_id);
+    const code = await send_conde.execute(email);
 
     return res
       .status(200)
-      .json("Email with code to recover user's password was sent");
+      .json("Email with code to recover your password was sent");
   } catch (err) {
     next(err);
   }

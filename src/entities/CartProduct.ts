@@ -28,6 +28,9 @@ class CartProduct {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Column()
+  quantity: number;
 }
 
 export default CartProduct;
