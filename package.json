@@ -6,8 +6,10 @@
   "author": "Julia Clepf <jumgc09@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "start": "node dist/src/server.js",
     "dev": "ts-node-dev --files --inspect --ignore-watch node_modules src/server.ts",
     "typeorm": "ts-node-dev node_modules/typeorm/cli.js",
+    "build": "tsc",
     "test": "NODE_ENV=test jest"
   },
   "dependencies": {

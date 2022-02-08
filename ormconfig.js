@@ -23,6 +23,20 @@ const developmentEnv = {
     migrationsDir: "./src/database/migrations",
   },
 };
+const prodEnv = {
+  type: "postgres",
+  url: process.env.DATABASE_URL,
+  entities: ["./dist/entities/**/*.js"],
+  migrations: ["./dist/database/migrations/*.js"],
+  cli: {
+    migrationsDir: "./dist/database/migrations",
+  },
+  synchronize: false,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : false,
+};
 
 const testEnv = {
   type: "sqlite",
@@ -30,10 +44,11 @@ const testEnv = {
   entities: ["./src/entities/**/*.ts"],
   synchronize: true,
 };
-// ALTERAR OS IFS QUANDO FIZER O DEPLOY, TEM QUE ACRESCENTAR A OPÇÃO DE ESTAR EM PRODUÇÃO
 
 let exportModule = undefined;
-if (process.env.NODE_ENV === "test") {
+if (process.env.NODE_ENV === "production") {
+  exportModule = prodEnv;
+} else if (process.env.NODE_ENV === "test") {
   exportModule = testEnv;
 } else {
   exportModule = developmentEnv;
