@@ -26,7 +26,6 @@ export const putProductInCart = async (product_id: string, user_id: string) => {
       throw new AppError("Product doesn't exist", 404);
     }
 
-    //PUTTING PRODUCT IN CART
     const cart = await cartRepository.findOne({ id: user?.cart.id });
 
     const cartProduct = await cartProductRepository.findOne({
@@ -48,8 +47,6 @@ export const putProductInCart = async (product_id: string, user_id: string) => {
     }
 
     const cart_1 = await cartRepository.findOne({ id: user?.cart.id });
-
-    // PUTTING PRODUCT IN ORDER
 
     const open_order = await orderRepository.findOne({
       where: [{ userId: user_id, Done: false }],
