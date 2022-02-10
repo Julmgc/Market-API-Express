@@ -26,7 +26,7 @@ export const userOrder = async (user_id: any) => {
     });
 
     if (!open_order) {
-      throw new AppError("OPEN ORDER NOT FOUND", 404);
+      throw new AppError("Your cart is empty", 404);
     }
     open_order.Done = true;
     await orderRepository.save(open_order);

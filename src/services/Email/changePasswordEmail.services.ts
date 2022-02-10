@@ -13,11 +13,6 @@ export const changeUserPassword = async (
   try {
     const codeRepository = getRepository(Code);
     const checkCode = await codeRepository.findOne({ where: { code: code } });
-
-    if (!checkCode) {
-      throw new AppError("Invalid code.", 401);
-    }
-
     const usersRepository = getCustomRepository(UserRepository);
 
     const user = await usersRepository.findOne({
@@ -25,6 +20,9 @@ export const changeUserPassword = async (
     });
     if (!user) {
       throw new AppError("User not found", 404);
+    }
+    if (!checkCode) {
+      throw new AppError("Invalid code.", 401);
     }
 
     if (password !== confirmation) {
