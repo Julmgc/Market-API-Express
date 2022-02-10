@@ -42,7 +42,7 @@ export const userOrder = async (user_id: any) => {
       throw new AppError("Your cart is empty", 404);
     }
 
-    sendOrderEmailService.execute({
+    await sendOrderEmailService.execute({
       name: user.name,
       email: user.email,
       orderTotal: total,
