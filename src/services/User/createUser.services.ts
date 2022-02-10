@@ -12,7 +12,7 @@ export const createUser = async (body: UserData, res: Response) => {
   const cartRepository = getCustomRepository(CartRepository);
 
   const hashedPassword = bcrypt.hashSync(password, 10);
-  const user = await userRepository.create({
+  const user = userRepository.create({
     name: name,
     email: email,
     password: hashedPassword,

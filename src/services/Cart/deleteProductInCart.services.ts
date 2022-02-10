@@ -19,7 +19,7 @@ export const deleteProductFromCart = async (
     const productsRepository = getCustomRepository(ProductRepository);
     const orderProductRepository = getRepository(OrderProduct);
 
-    const product = productsRepository.findOne({
+    const product = await productsRepository.findOne({
       where: { id: product_id },
     });
 

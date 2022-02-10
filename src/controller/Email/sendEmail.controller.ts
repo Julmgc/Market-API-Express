@@ -21,7 +21,7 @@ export const sendEmail = async (
     const name = user.name;
 
     const sendEmailService = new SendEmailService();
-    sendEmailService.execute({
+    await sendEmailService.execute({
       email,
       name,
       subject,
