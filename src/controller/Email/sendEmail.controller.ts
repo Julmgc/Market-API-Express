@@ -12,13 +12,13 @@ export const sendEmail = async (
   try {
     const { text, subject, email } = req.body;
     const userRepository = getCustomRepository(UserRepository);
-    const authenticated_user = await userRepository.findOne({
+    const user = await userRepository.findOne({
       where: { email: email },
     });
-    if (!authenticated_user) {
+    if (!user) {
       throw new AppError("User not found", 404);
     }
-    const name = authenticated_user.name;
+    const name = user.name;
 
     const sendEmailService = new SendEmailService();
     sendEmailService.execute({
