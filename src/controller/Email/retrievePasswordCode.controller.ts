@@ -19,7 +19,7 @@ export const retrievePasswordCode = async (
 
     return res
       .status(200)
-      .json("Email with code to recover your password was sent");
+      .json("An email with a code to recover your password was sent.");
   } catch (err) {
     next(err);
   }

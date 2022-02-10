@@ -7,11 +7,12 @@ export const insertProductInCart = async (
   next: NextFunction
 ) => {
   try {
-    const { product } = req.body;
+    const { productId } = req.body;
 
-    const cart = await putProductInCart(product, req.user.id);
-
-    return res.status(200).json(cart);
+    const cart = await putProductInCart(productId, req.user.id);
+    const total = cart?.getSubtotal();
+    const response = { cart: cart, total: total };
+    return res.status(200).json(response);
   } catch (err) {
     next(err);
   }

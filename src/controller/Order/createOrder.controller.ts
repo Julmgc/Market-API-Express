@@ -10,7 +10,9 @@ export const createOrder = async (
     const user_id = req.user.id;
 
     const makeAnOrder = await userOrder(user_id);
-    return res.status(200).json(makeAnOrder);
+    const total = makeAnOrder?.getTotal();
+    const response = { Order: makeAnOrder, total: total };
+    return res.status(200).json(response);
   } catch (error) {
     next(error);
   }

@@ -3,8 +3,6 @@ import { getCustomRepository, getRepository } from "typeorm";
 import UserRepository from "../../repository/user.repository";
 import CartRepository from "../../repository/cart.repository";
 import OrderRepository from "../../repository/orderRepository";
-import { Cart, CartProduct } from "../../entities";
-import ProductRepository from "../../repository/product.repository";
 import SendOrderEmailService from "../Email/sendOrderEmail.services";
 import OrderProduct from "../../entities/OrderProduct";
 
@@ -27,20 +25,18 @@ export const userOrder = async (user_id: any) => {
       where: [{ userId: user_id }, { Done: false }],
     });
 
-    const orderId = open_order?.id;
-    const data = { Done: true };
-
-    await orderRepository.update(`${orderId}`, data);
-    const orderAfterUpdate = await orderRepository.findOne({
-      where: [{ userId: user_id }],
-    });
+    if (!open_order) {
+      throw new AppError("OPEN ORDER NOT FOUND", 404);
+    }
+    open_order.Done = true;
+    await orderRepository.save(open_order);
 
     const user_cart = cartRepository.create({ user: user });
 
     await cartRepository.save(user_cart);
 
     const sendOrderEmailService = new SendOrderEmailService();
-    const total = orderAfterUpdate?.getTotal();
+    const total = open_order?.getTotal();
 
     if (!total) {
       throw new AppError("Your cart is empty", 404);
@@ -52,7 +48,7 @@ export const userOrder = async (user_id: any) => {
       orderTotal: total,
     });
 
-    return orderAfterUpdate;
+    return open_order;
   } catch (error) {
     throw new AppError((error as any).message, 401);
   }

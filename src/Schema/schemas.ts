@@ -27,7 +27,7 @@ export const productRegisterSchema = yup.object().shape({
 });
 
 export const putProductInCartRegisterSchema = yup.object().shape({
-  product: yup.number().required("Product field is required"),
+  productId: yup.number().required("ProductId field is required"),
 });
 
 export const sendEmailSchema = yup.object().shape({

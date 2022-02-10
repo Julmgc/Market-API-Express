@@ -2,16 +2,16 @@ import express from "express";
 import { initializerRouter } from "./router";
 import "reflect-metadata";
 import { errorHandler } from "./middlewares/error.middleware";
-// import swaggerUiExpress from "swagger-ui-express";
-// import swaggerDocument from "./swagger.json";
+import swaggerUiExpress from "swagger-ui-express";
+import swaggerDocument from "./swagger.json";
 
 const app = express();
 
-// app.use(
-//   "/api-documentation",
-//   swaggerUiExpress.serve,
-//   swaggerUiExpress.setup(swaggerDocument)
-// );
+app.use(
+  "/api-documentation",
+  swaggerUiExpress.serve,
+  swaggerUiExpress.setup(swaggerDocument)
+);
 
 app.use(express.json());
 

@@ -6,8 +6,7 @@ export const changePassword = async (
   next: NextFunction
 ) => {
   try {
-    const { email } = req.body;
-    const { code, password, confirmation } = req.body;
+    const { email, code, password, confirmation } = req.body;
 
     const new_password = await changeUserPassword(
       email,

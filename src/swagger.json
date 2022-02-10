@@ -15,6 +15,10 @@
     {
       "url": "http://localhost:3000/api",
       "description": "local"
+    },
+    {
+      "url": "https://market-products.herokuapp.com/api",
+      "description": "Production server"
     }
   ],
   "paths": {
@@ -86,14 +90,16 @@
         "description": "This route returns a specific user information",
         "tags": ["User"],
         "security": [{ "bearerAuth": [] }],
+
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "description": "User id",
             "required": true,
-            "type": "string",
-            "format": "uuid"
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
@@ -199,7 +205,7 @@
         "summary": "Lists all products",
         "description": "This route return a list of all products",
         "tags": ["Products"],
-        "security": [{ "bearerAuth": [] }],
+
         "responses": {
           "401": {
             "description": "Missing authorization headers"
@@ -229,8 +235,9 @@
             "in": "path",
             "description": "product id",
             "required": true,
-            "type": "string",
-            "format": "uuid"
+            "schema": {
+              "type": "number"
+            }
           }
         ],
         "responses": {
@@ -259,7 +266,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "$ref": "#/components/schemas/Cart"
+                "$ref": "#/components/schemas/PostCart"
               }
             }
           }
@@ -275,7 +282,27 @@
                 "examples": {
                   "cart": {
                     "value": {
-                      "productId": "b1f92f56-db3a-48de-9309-5c23c5dfc355"
+                      "id": "118857cb-007c-490a-bbf6-c555fd9c2fad",
+                      "createdOn": "2022-02-09T17:41:56.217Z",
+                      "updatedOn": "2022-02-09T17:41:56.217Z",
+                      "products": [
+                        {
+                          "id": 4,
+                          "cartId": "118857cb-007c-490a-bbf6-c555fd9c2fad",
+                          "created_at": "2022-02-09T18:09:25.552Z",
+                          "updated_at": "2022-02-09T18:19:45.837Z",
+                          "quantity": 2,
+                          "product": {
+                            "id": 1,
+                            "name": "string",
+                            "price": 10,
+                            "description": "string",
+                            "created_at": "2022-02-09T17:21:51.374Z",
+                            "updated_at": "2022-02-09T17:21:51.374Z"
+                          }
+                        }
+                      ],
+                      "total": 20
                     }
                   }
                 },
@@ -323,8 +350,10 @@
             "in": "path",
             "description": "cart id",
             "required": true,
-            "type": "string",
-            "format": "uuid"
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
@@ -357,13 +386,6 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "examples": {
-                  "cart": {
-                    "value": {
-                      "productId": 4
-                    }
-                  }
-                },
                 "schema": {
                   "type": "object",
                   "$ref": "#/components/schemas/Cart"
@@ -408,8 +430,10 @@
             "in": "path",
             "description": "order id",
             "required": true,
-            "type": "string",
-            "format": "uuid"
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
@@ -426,93 +450,101 @@
           }
         }
       }
-    }
-  },
-  "/email": {
-    "post": {
-      "summary": "Sends an e-mail to an user",
-      "description": "This route send an e-mail to an user",
-      "tags": ["Email"],
-      "security": [{ "bearerAuth": [] }],
-      "requestBody": {
-        "content": {
-          "application/json": {
+    },
+    "/email": {
+      "post": {
+        "summary": "Sends an e-mail to an user",
+        "description": "This route send an e-mail to an user",
+        "tags": ["Email"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/Email"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "201": {
+            "description": "Email was sent.",
             "schema": {
               "type": "object",
               "$ref": "#/components/schemas/Email"
             }
           }
         }
-      },
-      "responses": {
-        "401": {
-          "description": "Unauthorized"
-        },
-        "201": {
-          "description": "Email was sent.",
-          "schema": {
-            "type": "object",
-            "$ref": "#/components/schemas/Email"
-          }
-        }
       }
-    }
-  },
+    },
 
-  "/recuperar": {
-    "post": {
-      "summary": "Sends a code to the user",
-      "description": "This route sends a code to the user to change password",
-      "tags": ["Recuperar"],
-      "requestBody": {
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "$ref": "#/components/schemas/Recuperar"
+    "/recuperar": {
+      "post": {
+        "summary": "Sends a code to the user",
+        "description": "This route sends a code to the user to change password",
+        "tags": ["Recuperar"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/Recuperar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "404": {
+            "description": "User not found"
+          },
+          "201": {
+            "description": "Email with the code to retrieve your password was sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Recuperar"
+                }
+              }
             }
           }
         }
-      },
-      "responses": {
-        "404": {
-          "description": "User not found"
-        },
-        "201": {
-          "description": "Email with the code to retrieve your password was sent.",
-          "schema": {
-            "type": "object",
-            "$ref": "#/components/schemas/Code"
-          }
-        }
       }
-    }
-  },
+    },
 
-  "/alterar_senha": {
-    "post": {
-      "summary": "Changes users password",
-      "description": "This route changes users password",
-      "tags": ["Password"],
-      "requestBody": {
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "$ref": "#/components/schemas/Password"
+    "/alterar_senha": {
+      "post": {
+        "summary": "Changes users password",
+        "description": "This route changes users password",
+        "tags": ["Password"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/Password"
+              }
             }
           }
-        }
-      },
-      "responses": {
-        "404": {
-          "description": "User not found"
         },
-        "201": {
-          "description": "Your password was changed.",
-          "schema": {
-            "type": "object",
-            "$ref": "#/components/schemas/Password"
+        "responses": {
+          "404": {
+            "description": "User not found"
+          },
+          "201": {
+            "description": "Your password was changed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Password"
+                }
+              }
+            }
           }
         }
       }
@@ -520,6 +552,13 @@
   },
 
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
       "LoginUser": {
         "type": "object",
@@ -646,7 +685,25 @@
         "type": "object",
         "properties": {
           "productId": {
-            "type": "string"
+            "type": "number"
+          },
+          "createdOn": {
+            "type": "number"
+          },
+          "updatedOn": {
+            "type": "number"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "product": {}
+        }
+      },
+      "PostCart": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "number"
           }
         }
       },
@@ -659,14 +716,25 @@
         "example": [
           {
             "id": "c1b1a4a7-d8d4-449b-ba7f-5fbc505c15ba",
-            "total": null,
+            "createdOn": "2022-02-09T17:08:17.164Z",
+            "updatedOn": "2022-02-09T17:08:17.164Z",
+
             "updated_at": "2022-01-14T21:22:39.858Z",
             "products": [
               {
-                "id": "5eadb0ff-5a0d-4642-be33-d2e8c8d60566",
-                "name": "Monitor '32",
-                "created_at": "2022-01-23T23:10:49.933Z",
-                "updated_at": "2022-01-23T23:10:49.933Z"
+                "id": 2,
+                "cartId": "5ad41564-c7fd-421d-9c30-eb40217149f3",
+                "created_at": "2022-02-09T17:53:45.423Z",
+                "updated_at": "2022-02-09T17:53:45.423Z",
+                "quantity": 1,
+                "product": {
+                  "id": 1,
+                  "name": "string",
+                  "price": 0,
+                  "description": "string",
+                  "created_at": "2022-02-09T17:21:51.374Z",
+                  "updated_at": "2022-02-09T17:21:51.374Z"
+                }
               }
             ]
           }
@@ -757,40 +825,80 @@
         },
         "example": [
           {
-            "id": "ed600b17-dd16-43dd-bb50-fd95c85baa9c",
-            "total": "1800.00",
-            "userId": "bbbd8219-738d-4091-a5ee-e7fd1a4c4025",
-            "created_at": "2022-01-22T23:54:21.133Z",
-            "updated_at": "2022-01-22T23:54:21.245Z",
+            "id": "762d9316-fe5e-4697-954c-ca6b328315b9",
+            "createdOn": "2022-02-09T19:20:32.811Z",
+            "Done": true,
+            "userId": "5294c8e5-d4a0-4adf-85b1-3b2cbf545fc9",
             "products": [
               {
+                "id": 8,
+                "orderId": "762d9316-fe5e-4697-954c-ca6b328315b9",
+                "created_at": "2022-02-09T19:20:32.825Z",
+                "updated_at": "2022-02-09T19:20:32.825Z",
+                "quantity": 1,
                 "product": {
-                  "id": "e18d4518-fe01-4912-8af8-c7eeb7746d6c",
-                  "name": "TV '28",
-                  "price": "1000.00",
-                  "created_at": "2022-01-22T23:53:25.686Z",
-                  "updated_at": "2022-01-22T23:53:25.686Z"
+                  "id": 1,
+                  "name": "Black chair",
+                  "price": 100,
+                  "description": "A good chair",
+                  "created_at": "2022-02-09T17:21:51.374Z",
+                  "updated_at": "2022-02-09T17:21:51.374Z"
                 }
               },
               {
+                "id": 9,
+                "orderId": "762d9316-fe5e-4697-954c-ca6b328315b9",
+                "created_at": "2022-02-09T19:25:17.192Z",
+                "updated_at": "2022-02-09T19:25:17.192Z",
+                "quantity": 1,
                 "product": {
-                  "id": "d019dcfc-59ed-4a94-9223-c99e2f9e2986",
-                  "name": "Monito '20",
-                  "price": "800.00",
-                  "created_at": "2022-01-22T23:53:17.979Z",
-                  "updated_at": "2022-01-22T23:53:17.979Z"
+                  "id": 1,
+                  "name": "Table",
+                  "price": 908,
+                  "description": "A glass table",
+                  "created_at": "2022-02-09T17:21:51.374Z",
+                  "updated_at": "2022-02-09T17:21:51.374Z"
+                }
+              }
+            ],
+            "id": "762d9316-fe5e-4697-954c-ca6b328315b9",
+            "createdOn": "2022-02-09T19:20:32.811Z",
+            "Done": true,
+            "userId": "5294c8e5-d4a0-4adf-85b1-3b2cbf545fc9",
+            "products": [
+              {
+                "id": 8,
+                "orderId": "762d9316-fe5e-4697-954c-ca6b328315b9",
+                "created_at": "2022-02-09T19:20:32.825Z",
+                "updated_at": "2022-02-09T19:20:32.825Z",
+                "quantity": 1,
+                "product": {
+                  "id": 1,
+                  "name": "Wardrobe",
+                  "price": 2400,
+                  "description": "A wooden wardrobe",
+                  "created_at": "2022-02-09T17:21:51.374Z",
+                  "updated_at": "2022-02-09T17:21:51.374Z"
+                }
+              },
+              {
+                "id": 9,
+                "orderId": "762d9316-fe5e-4697-954c-ca6b328315b9",
+                "created_at": "2022-02-09T19:25:17.192Z",
+                "updated_at": "2022-02-09T19:25:17.192Z",
+                "quantity": 1,
+                "product": {
+                  "id": 1,
+                  "name": "Bed",
+                  "price": 3900,
+                  "description": "King size bed",
+                  "created_at": "2022-02-09T17:21:51.374Z",
+                  "updated_at": "2022-02-09T17:21:51.374Z"
                 }
               }
             ]
           }
         ]
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
       }
     }
   }
