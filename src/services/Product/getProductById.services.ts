@@ -5,11 +5,11 @@ import AppError from "../../errors/AppError";
 export const productById = async (product_by_id: any) => {
   try {
     const productsRepository = getCustomRepository(ProductRepository);
-    const product = productsRepository.findOne({
+    const product = await productsRepository.findOne({
       where: { id: product_by_id },
     });
 
-    if (product === undefined) {
+    if (!product) {
       throw new AppError("Product Not Found", 400);
     }
 

@@ -15,12 +15,12 @@ export const userLogin = async (
 
     const user1 = await userRepository.findByEmail(email);
 
-    const user = await userRepository.findOneOrFail({
+    const user = await userRepository.findOne({
       where: { id: user1?.id },
       select: ["id", "name", "email", "createdOn", "password"],
     });
 
-    if (user === undefined || !bcrypt.compareSync(password, user.password)) {
+    if (!user || !bcrypt.compareSync(password, user.password)) {
       throw new AppError("Wrong email/password", 401);
     }
     if (user) {

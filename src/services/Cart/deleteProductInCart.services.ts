@@ -45,7 +45,10 @@ export const deleteProductFromCart = async (
       where: { cartId: cart?.id, product: product_id },
     });
     if (!cartProduct) {
-      throw new AppError("You don't have this product in your cart", 404);
+      throw new AppError(
+        `You don't have product with id: ${product_id} in your cart`,
+        404
+      );
     }
     const order = await orderRepository.findOne({
       userId: authenticated_user?.id,
