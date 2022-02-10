@@ -50,6 +50,7 @@ export const userOrder = async (user_id: any) => {
 
     return open_order;
   } catch (error) {
+    console.log("ERROR", error);
     throw new AppError((error as any).message, 401);
   }
 };

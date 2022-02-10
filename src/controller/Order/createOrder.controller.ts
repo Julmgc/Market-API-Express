@@ -14,6 +14,7 @@ export const createOrder = async (
     const response = { Order: makeAnOrder, total: total };
     return res.status(200).json(response);
   } catch (error) {
+    console.log("ERROR", error);
     next(error);
   }
 };
