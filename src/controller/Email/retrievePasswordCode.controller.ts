@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from "express-serve-static-core";
 
-import SendEmailService from "../../services/Email/sendEmail.services";
+import SendEmailService from "../../services/Email/genericEmail.services";
 import { getCustomRepository } from "typeorm";
 import UserRepository from "../../repository/user.repository";
 import AppError from "../../errors/AppError";
