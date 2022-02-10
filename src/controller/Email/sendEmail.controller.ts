@@ -9,7 +9,7 @@ export const sendEmail = async (
   next: NextFunction
 ) => {
   try {
-    const sendEmail = genericEmailToUser(req.body);
+    const sendEmail = await genericEmailToUser(req.body);
 
     return res.status(201).json("Email was sent.");
   } catch (err) {
