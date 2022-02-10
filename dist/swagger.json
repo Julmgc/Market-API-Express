@@ -1,0 +1,897 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Market",
+        "description": "Market is an API for a simples store.",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.market.com/support",
+            "email": "market@email.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/api",
+            "description": "local"
+        },
+        {
+            "url": "https://market-products.herokuapp.com/api",
+            "description": "Production server"
+        }
+    ],
+    "paths": {
+        "/user": {
+            "post": {
+                "summary": "User register",
+                "description": "This route registers users",
+                "tags": ["Users"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "user": {
+                                    "value": {
+                                        "name": "julia matos",
+                                        "email": "jumgc@gmail.com",
+                                        "password": "12345",
+                                        "isAdm": true
+                                    }
+                                }
+                            },
+                            "schema": { "$ref": "#/components/schemas/User" }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "E-mail already exists"
+                    },
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lists all users",
+                "description": "This routes returns all users",
+                "tags": ["Users"],
+                "security": [{ "bearerAuth": [] }],
+                "responses": {
+                    "401": {
+                        "description": "Missing authorization headers"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/ArrayOfUsers"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{id}": {
+            "get": {
+                "summary": "Searches for an user",
+                "description": "This route returns a specific user information",
+                "tags": ["User"],
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Missing authorization headers"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "summary": "User login",
+                "description": "This route allows the user to login ",
+                "tags": ["Users"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/LoginUser" }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Wrong email/password"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "token": {
+                                        "value": {
+                                            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg2YjE1NGFmLTY2MGQtNDljZS1hMjdmLWM3MmNhNzE5ZThlNyIsImlhdCI6MTY0NDMyODUxOSwiZXhwIjoxNjQ0NDE0OTE5fQ.xMLms7EYiFJnOrhecq8nczpnbAAQ-j7G8zuMuRm-STc"
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "properties": { "token": { "type": "string" } }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/product": {
+            "post": {
+                "summary": "Registers a product",
+                "description": "This route registers a product",
+                "tags": ["Products"],
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/Product"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "product": {
+                                        "value": {
+                                            "name": "TV '52",
+                                            "price": 1100,
+                                            "id": "86b154af-660d-49ce-a27f-c72ca719e8e7",
+                                            "created_at": "2022-02-08T11:53:06.896Z",
+                                            "updated_at": "2022-02-08T11:53:06.896Z"
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lists all products",
+                "description": "This route return a list of all products",
+                "tags": ["Products"],
+                "responses": {
+                    "401": {
+                        "description": "Missing authorization headers"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "$ref": "#/components/schemas/ArrayOfProducts"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/product/{id}": {
+            "get": {
+                "summary": "Searches for a specific product",
+                "description": "This route returns a specific product",
+                "tags": ["Products"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "product id",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cart": {
+            "post": {
+                "summary": "Add a product to users cart",
+                "description": "This route adds a product to the users cart",
+                "tags": ["Carts"],
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/PostCart"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Product doesn’t exist"
+                    },
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "cart": {
+                                        "value": {
+                                            "id": "118857cb-007c-490a-bbf6-c555fd9c2fad",
+                                            "createdOn": "2022-02-09T17:41:56.217Z",
+                                            "updatedOn": "2022-02-09T17:41:56.217Z",
+                                            "products": [
+                                                {
+                                                    "id": 4,
+                                                    "cartId": "118857cb-007c-490a-bbf6-c555fd9c2fad",
+                                                    "created_at": "2022-02-09T18:09:25.552Z",
+                                                    "updated_at": "2022-02-09T18:19:45.837Z",
+                                                    "quantity": 2,
+                                                    "product": {
+                                                        "id": 1,
+                                                        "name": "string",
+                                                        "price": 10,
+                                                        "description": "string",
+                                                        "created_at": "2022-02-09T17:21:51.374Z",
+                                                        "updated_at": "2022-02-09T17:21:51.374Z"
+                                                    }
+                                                }
+                                            ],
+                                            "total": 20
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Cart"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lists all carts",
+                "description": "This route lists all carts",
+                "tags": ["Carts"],
+                "security": [{ "bearerAuth": [] }],
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "$ref": "#/components/schemas/ArrayOfCarts"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cart/{id}": {
+            "get": {
+                "summary": "Searches for a specific cart",
+                "description": "This route returns a specific cart",
+                "tags": ["Carts"],
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "cart id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Cart"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/buy": {
+            "post": {
+                "summary": "Makes an order",
+                "description": "Makes an order and sends an e-mail to the user",
+                "tags": ["Orders"],
+                "security": [{ "bearerAuth": [] }],
+                "responses": {
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Cart"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lists all orders",
+                "description": "This route returns all users orders",
+                "tags": ["Orders"],
+                "security": [{ "bearerAuth": [] }],
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "$ref": "#/components/schemas/ArrayOfOrders"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/buy/{id}": {
+            "get": {
+                "summary": "Searches for a specific order",
+                "description": "This route returns a specific order",
+                "tags": ["Orders"],
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "order id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Order"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/email": {
+            "post": {
+                "summary": "Sends an e-mail to an user",
+                "description": "This route send an e-mail to an user",
+                "tags": ["Email"],
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/Email"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "201": {
+                        "description": "Email was sent.",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/components/schemas/Email"
+                        }
+                    }
+                }
+            }
+        },
+        "/recuperar": {
+            "post": {
+                "summary": "Sends a code to the user",
+                "description": "This route sends a code to the user to change password",
+                "tags": ["Recuperar"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/Recuperar"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "201": {
+                        "description": "Email with the code to retrieve your password was sent.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Recuperar"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/alterar_senha": {
+            "post": {
+                "summary": "Changes users password",
+                "description": "This route changes users password",
+                "tags": ["Password"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/Password"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "201": {
+                        "description": "Your password was changed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Password"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "LoginUser": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Password": {
+                "type": "object",
+                "required": ["email", "password", "code", "confirmation"],
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "code": {
+                        "type": "string"
+                    },
+                    "confirmation": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Recuperar": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Email": {
+                "type": "object",
+                "required": ["email", "subject", "text"],
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "subject": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "isAdm": {
+                        "type": "boolean"
+                    },
+                    "uuid": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "example": {
+                    "uuid": "86b154af-660d-49ce-a27f-c72ca719e8e7",
+                    "name": "newUser",
+                    "email": "newUser@gmail.com",
+                    "isAdm": true,
+                    "created_at": "2022-02-08T11:53:06.896Z",
+                    "updated_at": "2022-02-08T11:53:06.896Z"
+                }
+            },
+            "Product": {
+                "type": "object",
+                "required": ["name", "price", "description"],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "description": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ArrayOfProducts": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "$ref": "#components/schemas/Product"
+                },
+                "example": [
+                    {
+                        "id": 1,
+                        "name": "Jar",
+                        "description": "A green glass jar",
+                        "created_at": "2022-02-06T22:20:31.722Z",
+                        "updated_at": "2022-02-06T22:20:31.722Z"
+                    },
+                    {
+                        "id": 2,
+                        "name": "Mirror",
+                        "description": "A 1x1m mirror",
+                        "created_at": "2022-02-06T22:20:31.722Z",
+                        "updated_at": "2022-02-06T22:20:31.722Z"
+                    }
+                ]
+            },
+            "Cart": {
+                "type": "object",
+                "properties": {
+                    "productId": {
+                        "type": "number"
+                    },
+                    "createdOn": {
+                        "type": "number"
+                    },
+                    "updatedOn": {
+                        "type": "number"
+                    },
+                    "quantity": {
+                        "type": "number"
+                    },
+                    "product": {}
+                }
+            },
+            "PostCart": {
+                "type": "object",
+                "properties": {
+                    "productId": {
+                        "type": "number"
+                    }
+                }
+            },
+            "ArrayOfCarts": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "$ref": "#components/schemas/Cart"
+                },
+                "example": [
+                    {
+                        "id": "c1b1a4a7-d8d4-449b-ba7f-5fbc505c15ba",
+                        "createdOn": "2022-02-09T17:08:17.164Z",
+                        "updatedOn": "2022-02-09T17:08:17.164Z",
+                        "updated_at": "2022-01-14T21:22:39.858Z",
+                        "products": [
+                            {
+                                "id": 2,
+                                "cartId": "5ad41564-c7fd-421d-9c30-eb40217149f3",
+                                "created_at": "2022-02-09T17:53:45.423Z",
+                                "updated_at": "2022-02-09T17:53:45.423Z",
+                                "quantity": 1,
+                                "product": {
+                                    "id": 1,
+                                    "name": "string",
+                                    "price": 0,
+                                    "description": "string",
+                                    "created_at": "2022-02-09T17:21:51.374Z",
+                                    "updated_at": "2022-02-09T17:21:51.374Z"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ArrayOfUsers": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "$ref": "#components/schemas/User"
+                },
+                "example": [
+                    {
+                        "id": "058280b2-8d79-450e-a29c-095cdfc751f4",
+                        "name": "Marcela Aguiar",
+                        "email": "marcela@hotmail.com",
+                        "isAdm": true,
+                        "created_at": "2022-01-23T23:10:49.933Z",
+                        "updated_at": "2022-01-23T23:10:49.933Z"
+                    },
+                    {
+                        "id": "709834b3-df1e-432e-bc12-adfd4fe122db",
+                        "name": "Wander Moreira",
+                        "email": "wander@hotmail.com",
+                        "isAdm": false,
+                        "created_at": "2022-01-23T18:06:24.710Z",
+                        "updated_at": "2022-01-23T18:39:44.319Z"
+                    }
+                ]
+            },
+            "Order": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "total": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "userId": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    },
+                    "products": {
+                        "type": "array",
+                        "$ref": "#/components/schemas/ArrayOfProducts"
+                    }
+                },
+                "example": {
+                    "id": "xdf00b27-ds13-400d-ddfa-fd95c85baa9c",
+                    "total": "1800.00",
+                    "userId": "bbbd8219-738d-4091-a5ee-e7fd1a4c4025",
+                    "created_at": "2022-01-22T23:54:21.133Z",
+                    "updated_at": "2022-01-22T23:54:21.245Z",
+                    "products": [
+                        {
+                            "product": {
+                                "id": "e18d4518-fe01-4912-8af8-c7eeb7746d6c",
+                                "name": "TV '58",
+                                "price": "1000.00",
+                                "created_at": "2022-01-22T23:53:25.686Z",
+                                "updated_at": "2022-01-22T23:53:25.686Z"
+                            }
+                        },
+                        {
+                            "product": {
+                                "id": "d019dcfc-59ed-4a94-9223-c99e2f9e2986",
+                                "name": "Monito '20",
+                                "price": "800.00",
+                                "created_at": "2022-01-22T23:53:17.979Z",
+                                "updated_at": "2022-01-22T23:53:17.979Z"
+                            }
+                        }
+                    ]
+                }
+            },
+            "ArrayOfOrders": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "$ref": "#components/schemas/Order"
+                },
+                "example": [
+                    {
+                        "id": "762d9316-fe5e-4697-954c-ca6b328315b9",
+                        "createdOn": "2022-02-09T19:20:32.811Z",
+                        "Done": true,
+                        "userId": "5294c8e5-d4a0-4adf-85b1-3b2cbf545fc9",
+                        "products": [
+                            {
+                                "id": 8,
+                                "orderId": "762d9316-fe5e-4697-954c-ca6b328315b9",
+                                "created_at": "2022-02-09T19:20:32.825Z",
+                                "updated_at": "2022-02-09T19:20:32.825Z",
+                                "quantity": 1,
+                                "product": {
+                                    "id": 1,
+                                    "name": "Black chair",
+                                    "price": 100,
+                                    "description": "A good chair",
+                                    "created_at": "2022-02-09T17:21:51.374Z",
+                                    "updated_at": "2022-02-09T17:21:51.374Z"
+                                }
+                            },
+                            {
+                                "id": 9,
+                                "orderId": "762d9316-fe5e-4697-954c-ca6b328315b9",
+                                "created_at": "2022-02-09T19:25:17.192Z",
+                                "updated_at": "2022-02-09T19:25:17.192Z",
+                                "quantity": 1,
+                                "product": {
+                                    "id": 1,
+                                    "name": "Table",
+                                    "price": 908,
+                                    "description": "A glass table",
+                                    "created_at": "2022-02-09T17:21:51.374Z",
+                                    "updated_at": "2022-02-09T17:21:51.374Z"
+                                }
+                            }
+                        ],
+                        "id": "762d9316-fe5e-4697-954c-ca6b328315b9",
+                        "createdOn": "2022-02-09T19:20:32.811Z",
+                        "Done": true,
+                        "userId": "5294c8e5-d4a0-4adf-85b1-3b2cbf545fc9",
+                        "products": [
+                            {
+                                "id": 8,
+                                "orderId": "762d9316-fe5e-4697-954c-ca6b328315b9",
+                                "created_at": "2022-02-09T19:20:32.825Z",
+                                "updated_at": "2022-02-09T19:20:32.825Z",
+                                "quantity": 1,
+                                "product": {
+                                    "id": 1,
+                                    "name": "Wardrobe",
+                                    "price": 2400,
+                                    "description": "A wooden wardrobe",
+                                    "created_at": "2022-02-09T17:21:51.374Z",
+                                    "updated_at": "2022-02-09T17:21:51.374Z"
+                                }
+                            },
+                            {
+                                "id": 9,
+                                "orderId": "762d9316-fe5e-4697-954c-ca6b328315b9",
+                                "created_at": "2022-02-09T19:25:17.192Z",
+                                "updated_at": "2022-02-09T19:25:17.192Z",
+                                "quantity": 1,
+                                "product": {
+                                    "id": 1,
+                                    "name": "Bed",
+                                    "price": 3900,
+                                    "description": "King size bed",
+                                    "created_at": "2022-02-09T17:21:51.374Z",
+                                    "updated_at": "2022-02-09T17:21:51.374Z"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

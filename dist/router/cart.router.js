@@ -1,0 +1,20 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.cartRouter = void 0;
+const express_1 = require("express");
+const authentication_middleware_1 = require("../middlewares/authentication.middleware");
+const putProductInCart_controller_1 = require("../controller/Cart/putProductInCart.controller");
+const getCartById_controller_1 = require("../controller/Cart/getCartById.controller");
+const listCarts_controller_1 = require("../controller/Cart/listCarts.controller");
+const deleteProductInCart_controller_1 = require("../controller/Cart/deleteProductInCart.controller");
+const schema_validation_1 = require("../Schema/schema.validation");
+const schemas_1 = require("../Schema/schemas");
+const router = (0, express_1.Router)();
+const cartRouter = () => {
+    router.post("/cart", (0, schema_validation_1.validate)(schemas_1.putProductInCartRegisterSchema), authentication_middleware_1.isAuthenticated, putProductInCart_controller_1.insertProductInCart);
+    router.get("/cart", authentication_middleware_1.isAuthenticated, authentication_middleware_1.isAdm_middleware, listCarts_controller_1.getCarts);
+    router.get("/cart/:id", authentication_middleware_1.isAuthenticated, getCartById_controller_1.UserCart);
+    router.delete("/cart/:product_id", authentication_middleware_1.isAuthenticated, deleteProductInCart_controller_1.deleteCartProduct);
+    return router;
+};
+exports.cartRouter = cartRouter;
