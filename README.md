@@ -22,10 +22,6 @@ This app was developed for any kind of store, where adms can register products, 
 
 </div>
 
-### **For developers**
-
-DevJobs is a very easy to use app, after you have registered you'll be directed to the dashboard, there you'll have two options, either click on messages and check if you have received any mail from companies or click on resume. On the page resume you'll be able to create your resume and print it as a pdf.
-
 ## Technologies
 
 </div>
