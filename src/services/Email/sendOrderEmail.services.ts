@@ -43,7 +43,6 @@ export default class SendOrderEmailService {
       };
       mailer.sendMail(mail, (err, info) => {
         if (err) {
-          console.log(err);
           throw new AppError("Error while sending order email", 500);
         }
       });

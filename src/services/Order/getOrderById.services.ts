@@ -12,7 +12,7 @@ export const userOrder = async (user_id: any, order_id: any) => {
     });
 
     const order = await orderRepository.findOne({ id: order_id });
-    console.log(order);
+
     if (order === undefined) {
       throw new AppError("Order Not Found", 400);
     }
