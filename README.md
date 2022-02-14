@@ -12,7 +12,7 @@
 
 </div>
 
-This app was developed for any kind of store, where adms can register products, show them at thei web page e users can put them in their cart and buy them, adms can also see all the carts and orders.
+This app was developed for any kind of store, where adms can register products, show them at their web page and users can put them in their cart and buy them, adms can see all the carts and orders, send a generic email to the users and users can change their password by a code that is sent to their email.
 
 <div align ="center">
 
