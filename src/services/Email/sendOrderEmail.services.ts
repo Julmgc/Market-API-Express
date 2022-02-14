@@ -21,7 +21,6 @@ export default class SendOrderEmailService {
         },
       });
 
-      console.log("NODEMAILER");
       mailer.use(
         "compile",
         hbs({
@@ -43,13 +42,12 @@ export default class SendOrderEmailService {
         },
       };
       mailer.sendMail(mail, (err, info) => {
-        console.log("ERRO DO MAILER", info, err);
         if (err) {
+          console.log(err);
           throw new AppError("Error while sending order email", 500);
         }
       });
     } catch (error) {
-      console.log("ERROR", error);
       throw new AppError((error as any).message, 401);
     }
   }

@@ -10,8 +10,9 @@ export const UserOrder = async (
     const user_id = req.user.id;
     const order_id = req.params.id;
     const order = await userOrder(user_id, order_id);
-
-    return res.status(200).json(order);
+    const total = order.getTotal();
+    const response = { Order: order, total: total };
+    return res.status(200).json(response);
   } catch (err) {
     next(err);
   }

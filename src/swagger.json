@@ -359,7 +359,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "$ref": "#/components/schemas/Cart"
+                  "$ref": "#/components/schemas/PostCart"
                 }
               }
             }
