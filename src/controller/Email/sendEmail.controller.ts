@@ -11,7 +11,7 @@ export const sendEmail = async (
   try {
     const sendEmail = await genericEmailToUser(req.body);
 
-    return res.status(201).json("Email was sent.");
+    return res.status(201).json(sendEmail);
   } catch (err) {
     next(err);
   }

@@ -24,8 +24,8 @@ export const genericEmailToUser = async (user_info: any) => {
       subject,
       text,
     });
-
-    return user.email;
+    const responseUser = { email: email, subject: subject, text: text };
+    return responseUser;
   } catch (error) {
     throw new AppError((error as any).message, 401);
   }
